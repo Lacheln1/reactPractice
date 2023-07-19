@@ -1,0 +1,22 @@
+1. 태그는 꼭 닫혀야 한다 
+2. 두개이상의 태그는 꼭 하나의 태그로 감싸져있어야한다 (<> </>를 사용하거나 다른 태그를 이용하여 감쌀것)
+3. JSX 내부에서 자바스크립트 값을 사용하는 방법
+ex) const name = 'react'; //  {name} 
+
+4.style, className 사용하는 방법 
+ex) const style = {
+    // backgroundColor: 'black',
+    // color: 'aqua',
+    // fontSize: 24,
+    // padding: '1rem'
+}
+<div style={style}></div>
+css import 후
+<div className="클래스명"></div>
+
+5. JSX에서의 주석
+{/* 내용 */}
+
+<Hello
+//주석 처리 
+/>
