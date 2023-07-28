@@ -1,4 +1,4 @@
-import React,{useRef, useState,useMemo,useCallback} from 'react';
+import React,{useRef, useReducer,useMemo,useCallback} from 'react';
 import UserList from './UserList';
 import CreateUser from './CreateUser';
 
@@ -8,21 +8,12 @@ function countActiveUsers(users){
   return users.filter(user=>user.active).length;
 }
 
-function App() {
-  const [inputs, setInputs] = useState({
+const initialState={
+  inputs:{
     username:'',
     email:'',
-  });
-  const {username,email} = inputs;
-
-  const onChange = useCallback (e=>{
-    const{name,value} = e.target;
-    setInputs({
-      ...inputs,
-      [name] : value
-    });
-  },[inputs]);
-  const [users,setUsers] = useState([
+  },
+  users:[
     {
         id: 1,
         username:'lacheln',
@@ -41,42 +32,64 @@ function App() {
         email:'test2@naver.com',
         active : false
     }
-]);
+]
+}
 
+function reducer(state,action){
+  switch (action.type){
+    case'change_input':
+    return {
+      ...state,
+      inputs:{
+        ...state.inputs,
+        [action.name] : action.value
+      }
+    };
+    case 'create_user':
+      return {
+        inputs:initialState.inputs,
+        users: state.users.concat(action.user)
+      }
+    default:
+      throw new Error('unhandled')
+  }
+}
 
-const nextId = useRef(4);
+function App() {
+  const [state,dispatch] = useReducer(reducer, initialState);
+  const nextId = useRef(4);
+  const {users} = state;
+  const{username,email} = state.inputs;
+  const onChange = useCallback(e=>{
+    const {name,value} = e.target;
+    dispatch({
+      type:'change_input',
+      name,
+      value
+    })
+  },[]);
 
-const onCreate= useCallback(()=>{
-  const user={
-    id: nextId.current,
-    username,
-    email,
-  };
-  setUsers(users.concat(user));
-  setInputs({
-    username: '', 
-    email:''
-  });
-  
-  nextId.current+=1;
-},[username,email,users]);
-
-const onRemove = useCallback(id =>{
-  setUsers(users.filter(user=>user.id!==id));
-},[username,email,users])
-
-const onToggle = useCallback(id =>{
-  setUsers(users.map(
-    user=>user.id === id?{...user,active: !user.active}:user
-  ));
-},[username,email,users]);
-
-const count = useMemo(()=>countActiveUsers(users),users);
+  const onCreate = useCallback(()=>{
+    dispatch({
+      type : 'create_user',
+      user:{
+        id:nextId.current,
+        username,
+        email,
+      }
+    });
+    nextId.current+=1;
+  },[username,email])
   return (
     <>
-    <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
-    <UserList users={users} onRemove={onRemove} onToggle={onToggle}/>
-    <div>활동 사용자 수 : {count} </div>
+    <CreateUser 
+    username={username} 
+    email={email} 
+    onChange={onChange}
+    onCreate={onCreate} />
+
+    <UserList users={users}/>
+    <div>활동 사용자 수 : 0 </div>
   
     </>
    

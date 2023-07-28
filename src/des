@@ -20,3 +20,27 @@ css import 후
 <Hello
 //주석 처리 
 />
+
+
+연산된 값을 재사용하기 위해서는 usememo
+특정함수를 재사용하기 위해서는 usecallback
+컴포넌트 (렌더링된 결과물) 재사용하기 위해서는 react.memo
+
+use reducer : 상태 업데이트 로직을 컴포넌트 밖으로 분리 가능 
+reducer : 상태를 업데이트 하는 함수
+
+function reducer(state, action){
+    switch (action.type){
+        case 'INCREAMENT':
+            return state + 1;
+        case 'DECREMENT' : 
+            return state - 1;
+        defalut:
+            return state;
+    }
+}
+
+현재 상태와 action 객체를 받아와서 업데이트 된 상태를 반환 
+
+const [number, dispatch] = useReducer(reducer, 0); // 첫번째 파라미터엔 reducer 함수를 넣어주고 두번째 파라미터엔 기본값을 넣어줌
+//number : 상태를 의미 , dispatch : 액션을 발생시킨다
