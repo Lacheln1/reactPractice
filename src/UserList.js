@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useContext,useEffect} from 'react';
+import { UserDispatch } from './App';
 
-const User = React.memo(function User({ user , onRemove ,onToggle}) {
+const User = React.memo(function User({ user}) {
     const {username,email,id,active}=user;
+    const dispatch = useContext(UserDispatch)
     useEffect(()=>{
       console.log('user값이 설정됨')
       console.log(user);
@@ -17,22 +19,28 @@ const User = React.memo(function User({ user , onRemove ,onToggle}) {
             color : active ? 'green':'black',
             cursor : 'pointer'
         }}
-        onClick={()=>onToggle(id)}
+        onClick={()=>dispatch({
+          type: 'toggle_user',
+          id
+        })}
         >
             {username}
         </b>
         &nbsp;
       <span>({email})</span> 
-      <button onClick={()=>onRemove(id)}>삭제</button>
+      <button onClick={()=>dispatch({
+        type:'remove_user',
+        id
+      })}>삭제</button>
     </div>
   );
 });
 
-function UserList({ users, onRemove,onToggle }) {
+function UserList({ users }) {
   return (
     <div>
       {users.map(user => (
-        <User user={user} key={user.id} onRemove={onRemove} onToggle={onToggle} />
+        <User user={user} key={user.id}  />
       ))}
     </div>
   );

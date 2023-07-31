@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ContextSample from './contextSample';
+import Hello from './Hello';
+import Counter from './counter';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ContextSample />
+    <Counter />
   </React.StrictMode>
 );
 
